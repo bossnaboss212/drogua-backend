@@ -8,6 +8,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ CORRECTION 1: Trust proxy pour Render.com/Production
+app.set('trust proxy', 1);
+
 // ==================== MIDDLEWARES ====================
 app.use(helmet());
 app.use(cors({
@@ -26,10 +29,8 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // ==================== MONGODB CONNECTION ====================
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+// ✅ CORRECTION 2: Suppression des options obsolètes
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('✅ MongoDB connecté avec succès'))
 .catch(err => {
   console.error('❌ Erreur MongoDB:', err);
